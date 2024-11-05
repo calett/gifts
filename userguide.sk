@@ -1,0 +1,53 @@
+# cancels the help command
+on command "/help":
+	cancel event
+	send "&bRefer to /commands for help" to player
+# lists commands
+command /commands:
+	trigger:
+		send "&b - /rules" to player
+		send "&b - /discord" to player
+		send "&b&l - /gift" to player
+# you can replace with your own link
+command /discord:
+	trigger:
+		send formatted "&3&l<link:https://discord.gg/UtByXkgheY>Discord" to player	
+# original fari rules, may conflict with other commands
+command /rules:
+	trigger:
+		send "&b I - No hacking/exploiting/pie ray/possessing exploits" to player
+		send "&b II - No discrimination" to player
+		send "&b III - No crystal/anchor/cart/bed bomb pvp" to player
+		send "&b IV - No spamming / advertising" to player
+		send "&b V - No alts" to player
+		send "&b VI - No excessive toxicity / spawn killing / disobeying staff" to player
+		send "&b VII - No more than 10 players per team" to player
+		send "&b VIII - No NSFW" to player
+		send "&b IX - No combat logging" to player
+		send "&b X - No killing villagers" to player
+		send "&b XI - Maces, netherite armor, swords, and axes are disabled" to player
+# playtime command
+command /playtime <offlineplayer>:
+	trigger:
+		if total world time stat for arg-1 > 1200:
+			set {_minutes} to total world time stat for arg-1 / 1200
+			set {_minutes} to {_minutes} / 1200
+		else:
+			send "&b%arg-1% has played for %total world time stat for arg-1% seconds" to player
+			send "&b%arg-1% has played for %total world time stat for arg-1% seconds" to console
+		if total world time stat for arg-1 > 72000:
+			set {_hours} to total world time stat for arg-1 / 72000
+			set {_hours} to {_hours} / 72000
+		else:
+			if {_minutes} is set:
+				send "&b%arg-1% has played for %{_minutes}% minutes" to player
+				send "&b%arg-1% has played for %{_minutes}% minutes" to console
+		if total world time stat for arg-1 > 1728000:
+			set {_days} to total world time stat for arg-1
+			set {_days} to {_days} / 1728000
+			send "&b%arg-1% has played for %{_days}% days" to player 
+			send "&b%arg-1% has played for %{_days}% days" to console 
+		else:
+			if {_hours} is set:
+				send "&b%arg-1% has played for %{_hours}% hours" to player
+				send "&b%arg-1% has played for %{_hours}% hours" to console
