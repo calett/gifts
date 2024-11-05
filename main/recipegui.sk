@@ -1,0 +1,46 @@
+#recipes gui, may conflict with other commands!
+command /recipes:
+	trigger:
+		delete {craftableitems::*}
+		add ender pearl named "&4Orb of Life" with lore "&7&oCrafted from the parts of many living things" to {craftableitems::*}
+		add ender pearl named "&4Amplified Orb of Life" with lore "&7&oHolds the remnants of many living things" to {craftableitems::*}
+		add nether star named "&5Wish" with lore "&7&oA mysterious item used to change your gift." and "&5&lRIGHT CLICK TO CONSUME" to {craftableitems::*}
+		add amethyst shard named "&4Mysterious Gem" with lore "&7&oWhat is it?" and "&5&lRIGHT CLICK TO CONSUME" to {craftableitems::*}
+		set {recipegui.%player's uuid%} to chest inventory with 8 rows named "&bRecipes"
+		fillRGUI({recipegui.%player's uuid%})
+		loop size of {craftableitems::*} times:
+			set slot (loop-value)-1 of {recipegui.%player's uuid%} to {craftableitems::%loop-value%}
+		open {recipegui.%player's uuid%} to player
+on inventory close:
+	event-inventory is {recipegui.%player's uuid%}:
+		delete {recipegui.%player's uuid%}
+on inventory click:
+	event-inventory is {recipegui.%player's uuid%}:
+		cancel event
+		event-slot is barrier:
+			make player execute command "/recipes"
+		{craftableitems::*} contains event-slot:
+			set {_e} to event-slot
+			fillRGUI({recipegui.%player's uuid%})
+			{_e} is ender pearl named "&4Orb of Life":
+				set {_materials::*} to leather, blaze rod, bone, gunpowder, 1 ender pearl, gunpowder, bone, blaze rod, leather, and ender pearl named "&4Orb of Life" with lore "&7&oCrafted from the parts of many living things"
+			{_e} is ender pearl named "&4Amplified Orb of Life":
+				set {_materials::*} to diamond, ender pearl named "&4Orb of Life", diamond, ender pearl named "&4Orb of Life", wither skeleton skull, ender pearl named "&4Orb of Life", diamond, ender pearl named "&4Orb of Life", and diamond
+			{_e} is nether star named "&5Wish" with lore "&7&oA mysterious item used to change your gift." and "&5&lRIGHT CLICK TO CONSUME":
+				set {_materials::*} to ender pearl named "&4Amplified Orb of Life" with lore "&7&oHolds the remnants of many living things", netherite scrap, gold block, netherite scrap, nautilus shell, netherite scrap, gold block, netherite scrap, ender pearl named "&4Amplified Orb of Life" with lore "&7&oHolds the remnants of many living things"
+			{_e} is amethyst shard named "&4Mysterious Gem" with lore "&7&oWhat is it?" and "&5&lRIGHT CLICK TO CONSUME":
+				set {_materials::*} to redstone, diamond, redstone, netherite scrap, amethyst shard, netherite scrap, redstone, diamond, and redstone
+			set slot 10 of {recipegui.%player's uuid%} to {_materials::1}
+			set slot 11 of {recipegui.%player's uuid%} to {_materials::2}
+			set slot 12 of {recipegui.%player's uuid%} to {_materials::3}
+			set slot 19 of {recipegui.%player's uuid%} to {_materials::4}
+			set slot 20 of {recipegui.%player's uuid%} to {_materials::5}
+			set slot 21 of {recipegui.%player's uuid%} to {_materials::6}
+			set slot 28 of {recipegui.%player's uuid%} to {_materials::7}
+			set slot 29 of {recipegui.%player's uuid%} to {_materials::8}
+			set slot 30 of {recipegui.%player's uuid%} to {_materials::9}
+			set slot 24 of {recipegui.%player's uuid%} to {_e}
+			set slot 53 of {recipegui.%player's uuid%} to barrier named "&cExit"
+function fillRGUI(i: inventory):
+	loop 72 times:
+		set slot (loop-value)-1 of {_i} to light blue stained glass pane
