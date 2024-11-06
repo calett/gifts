@@ -1,0 +1,5 @@
+function resetPlayerAttributes(p: player):
+	loop all attribute types:
+		reset {_p}'s loop-value attribute
+		set {_p}'s generic movement speed attribute to 0.1
+		set {_p}'s generic attack damage attribute to 1
