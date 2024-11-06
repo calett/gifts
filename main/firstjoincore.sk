@@ -1,0 +1,21 @@
+# list of possible gifts a player can get when they join, uses strings
+on load:
+	delete {gifts::*}
+	add "thorneria" to {gifts::*}
+	add "duala" to {gifts::*}
+	add "witheria" to {gifts::*}
+	add "treasuria" to {gifts::*}
+# function to give player gift when they first join
+function firstJoinGift(p: player):
+	set {_r} to random element out of {gifts::*} 
+	add {_r} to {%{_p}'s uuid%.gifts::*}
+# insectio-specific, sets attributes & metamorphosis level
+	{_r} is "insectio":
+		set generic scale attribute of {_p} to {insectio.defaultSize}
+		set {metamorphosis.insectio.%{_p}'s uuid%} to 0
+# witheria-specific, randomizes the perm effect given
+	{_r} is "witheria":
+		witheriaEffect({_p})
+# gives a gift when a player joins
+on first join:
+	firstJoinGift(player)

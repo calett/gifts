@@ -1,0 +1,238 @@
+# command to add gifts
+command /giftadd <offlineplayer> <text>:
+	permission: op
+	trigger:
+		if {%arg-1's uuid%.gifts::*} contains arg-2:
+			send "&b%arg-1% already has gift %arg-2%" to player
+		else:
+			resetPlayerAttributes(arg-1)
+			add arg-2 to {%arg-1's uuid%.gifts::*}
+			send "&b%arg-1% has acquired the gift %arg-2%" to player
+			set generic scale attribute of arg-1 to 1
+			arg-2 is "insectio":
+				set generic scale attribute of arg-1 to 0.45
+				set {metamorphosis.insectio.%arg-1's uuid%} to 0
+			arg-2 is "witheria":
+				delete {witheria.effects::*}
+				add speed to {witheria.effects::*}
+				add haste to {witheria.effects::*}
+				add resistance to {witheria.effects::*}
+				add jump boost to {witheria.effects::*}
+				add strength to {witheria.effects::*}
+				set {_r} to random element out of {witheria.effects::*}
+				apply {_r} to player for 9999 days
+# makes it easy to see options		
+on tab complete of "/giftadd":
+	set tab completions for position 1 to all players
+	set tab completions for position 2 to "agilie", "mendia", "fortov", "maloc", "umbri", "cosmur", "arcul", "forgiph", "dominar", "spiritia", "muriace", "razent", "duralo", "mystif", "chemice", "controlix", "tachea", "sizer", "remedian", "insectio", "glacia", "thorneria", "blizzara", "duala", "witheria", "galaxa", "florith", "mutatia", "treasuria", and "dextor"
+on tab complete of "/giftremove":
+	set tab completions for position 1 to all players
+	set tab completions for position 2 to "agilie", "mendia", "fortov", "maloc", "umbri", "cosmur", "arcul", "forgiph", "dominar", "spiritia", "muriace", "razent", "duralo", "mystif", "chemice", "controlix", "tachea", "sizer", "remedian", "insectio", "glacia", "thorneria", "blizzara", "duala", "witheria", "galaxa", "florith", "mutatia", "treasuria", and "dextor"
+
+# command to remove gifts
+command /giftremove <offlineplayer> <text>:
+	permission: op
+	trigger:
+		if {%arg-1's uuid%.gifts::*} doesn't contain arg-2:
+			send "&b%arg-1% doesn't have gift %arg-2%" to player
+		else:
+			resetPlayerAttributes(arg-1)
+			remove arg-2 from {%arg-1's uuid%.gifts::*}
+			send "&b%arg-1% has lost the gift %arg-2%" to player
+			clear all potion effects of arg-1
+# command to check the gifts of a player
+command /giftsquery <offlineplayer>:
+	permission: op
+	trigger:
+		loop size of {%arg-1's uuid%.gifts::*} times:
+			send "%{%arg-1's uuid%.gifts::%loop-value%}%" to player
+			send "%{%arg-1's uuid%.gifts::%loop-value%}%" to console
+# the 1=1 is a placeholder in case you want a requirement. otherwise, this command tells a player their gift's description.
+command /gift:
+	trigger:
+		if 1 = 1:
+			if {%player's uuid%.gifts::*} contains "agilie":
+				send "&bYou are an Agilie! Known for their natural speed, they are hard to keep up with and quite frustrating to hunt." to player
+				send "&3&lDash: &3You can sneak while swimming or sprinting to dash forward." to player
+				send "&3&lFeatherweight: &3You are immune to fall damage." to player
+				send "&3&lEscape Measures: &3You gain a burst of speed whenever receiving damage." to player
+			if {%player's uuid%.gifts::*} contains "dextor":
+				send "&bYou are a Dextor! Naturally strong, they also possess accuracy and are skilled with the hands." to player
+				send "&3&lEmpowered Punches: &3You gain strength when hitting with your fists." to player
+				send "&3&lFocused Precision: &3You can slowly repair items by swapping them in your offhand. You can sneak to swap items in your offhand without repairing them." to player
+				send "&3&lProductive: &3You receive haste while mining, greatly increasing your efficiency." to player
+			if {%player's uuid%.gifts::*} contains "fortov":
+				send "&bYou are a Fortov! Extremely tough, they are excellent on the frontlines, and very difficult to defeat." to player
+				send "&3&lMolten Skin: &3You are completely immune to damage from fire." to player
+				send "&3&lDefensive Reaction: &3You gain resistance after receiving damage from entities." to player
+				send "&3&lShieldbearer: &3Landing a critical hit will speed up your shield cooldown." to player
+			if {%player's uuid%.gifts::*} contains "mendia":
+				send "&bYou are a Mendia! With an affinity for healing, they are an exceptional asset for any team." to player
+				send "&3&lNourishment: &3You gain extra regeneration whenever eating something." to player
+				send "&3&lRevitalize: &3By sneaking and right click, you can sacrifice a little energy to heal any living thing." to player
+				send "&3&lCulinarian: &3You can craft food that provides extra healing." to player
+			if {%player's uuid%.gifts::*} contains "maloc":
+				send "&bYou are a Maloc! Both cunning and dangerous, they are phenomenal warriors." to player
+				send "&3&lBloodsteal: &3You heal a little when performing a critical hit." to player
+				send "&3&lShieldcrush: &3You can disable an enemy's shield with a critical hit from a sword." to player
+				send "&3&lDeflect: &3Whenever you're shot by an arrow, you have a chance to negate it." to player
+			if {%player's uuid%.gifts::*} contains "umbri":
+				send "&bYou are an Umbri! Quiet hunters, they use the element of surprise to overwhelm and eliminate their foes." to player
+				send "&3&lDaze: &3You can temporarily blind enemies by attacking them." to player
+				send "&3&lPredator's Shot: &3Shooting enemies with arrows slows them down." to player
+				send "&3&lLethal Hit: &3Critting your opponents with your fists weakens them." to player
+			if {%player's uuid%.gifts::*} contains "cosmur":
+				send "&dYou are a Cosmur! These beings are very rare and are believed to have originated from outer space." to player
+				send "&3&lCosmic Protection: &3During the night, any damage you take has a chance to be nullified." to player
+				send "&3&lStarborn: &3You naturally gain much more experience." to player
+				send "&3&lDimensional Restoration: &3Traveling from one dimension to another fully replenishes your health." to player
+			if {%player's uuid%.gifts::*} contains "arcul":
+				send "&dYou are an Arcul! Few of these beings are known to be around. They harness mysterious magical powers." to player
+				send "&3&lTransmutate: &3By sneaking and right clicking on a stick, you can turn it into an arrow." to player
+				send "&3&lEmbers: &3You can ignite all living things in your vicinity by sneaking and right clicking on a piece of flint, consuming it in the process." to player
+				send "&3&lFatal Blow: &3Critical hits have a small chance to remove half of your opponent's health." to player
+			if {%player's uuid%.gifts::*} contains "forgiph":
+				send "&bYou are a Forgiph! They are able to forge gear unlike anything ever seen before, and commonly take jobs as merchants." to player
+				send "&3&lSupercraft: &3You can craft armor, tools, and weapons that take longer to break." to player
+				send "&3&lAdept Forging: &3Forging items with an anvil costs you less experience." to player
+				send "&3&lVeteran: &3Crafting armor, tools, and weapons has a chance to grant you a small amount of experience." to player
+			if {%player's uuid%.gifts::*} contains "spiritia":
+				send "&bYou are a Spiritia! Enigmatic beings with an arsenal of tricks, they are not to be underestimated." to player
+				send "&3&lEcho: &3When you are attacked while holding your shield, you reflect damage back onto your attacker." to player
+				send "&3&lShadowstrength: &3You deal more damage with critical hits while in the darkness." to player
+				send "&3&lFleeing Spirit: &3You become invisible whenever you take damage." to player
+			if {%player's uuid%.gifts::*} contains "dominar":
+				send "&bYou are a Dominar! They have a variety of skills to bring themselves to the top." to player
+				send "&3&lEqualize: &3When you are attacked, if you have less health than your attacker, you have a small chance to reflect the same damage back to them." to player
+				send "&3&lOverlord: &3When you are attacked, if you have more health than your attacker, you have a small chance to completely negate the attack." to player
+				send "&3&lEnhanced Blow: &3You deal extra damage with axes." to player
+			if {%player's uuid%.gifts::*} contains "muriace":
+				send "&bYou are a Muriace! They were created by Death, and are feared by many." to player
+				send "&3&lDeath's Blessing: &3Killing entities enhances the damage of your next hits." to player
+				send "&3&lSecond Chance: &3When you are about to die, there is a chance that Death will revive you." to player
+				send "&3&lReborn: &3When you respawn, you temporarily receive energizing effects." to player
+			if {%player's uuid%.gifts::*} contains "controlix":
+				send "&bYou are a Controlix! They are skilled at maintaining a tight grip on their victims." to player
+				send "&3&lDaze: &3Fully charged hits have a chance of stunning players, raising the cooldown of any weapon they are using!" to player
+				send "&3&lScramble: &3Hits have a chance of forcing your opponent to change their held item!" to player
+				send "&3&lHookshot: &3Shooting enemies with arrows brings them closer to you!" to player
+			if {%player's uuid%.gifts::*} contains "razent":
+				send "&bYou are a Razent! They are vicious and quick to starve any unprepared victims!" to player
+				send "&3&lFamine: &3Fully charged hits take hunger from your opponent!" to player
+				send "&3&lRetaliate: &3When you are hit, you have a chance of taking hunger from your opponent!" to player
+				send "&3&lFerocity: &3You deal more damage to players, the lower their hunger is!" to player
+			if {%player's uuid%.gifts::*} contains "mystif":
+				send "&bYou are a Mystif! They harness experience to make themselves stronger!" to player
+				send "&3&lEnergized: &3All experience you gain is doubled!" to player
+				send "&3&lCore: &3The more experience you have, the more damage you deal." to player
+				send "&3&lCharged Protection: &3The more experience you have, the higher chance you have to negate any damage!" to player
+			if {%player's uuid%.gifts::*} contains "duralo":
+				send "&bYou are a Duralo! Their primary strategy for winning fights is by slowly wearing down their victims!" to player
+				send "&3&lChip: &3Attacks with weapons have a high chance to steal durability from your opponents' weapons!" to player
+				send "&3&lFull Recovery: &3Every time you eat, you repair your armor a little bit." to player
+				send "&3&lRecuperate: &3Whenever your items lose durability, you heal a bit!" to player
+			if {%player's uuid%.gifts::*} contains "chemice":
+				send "&bYou are a Chemice! They take full advantage of the power of potions when in combat!" to player
+				send "&3&lAbsorb: &3You can steal other entities' effects by attacking them!" to player
+				send "&3&lInject: &3If you have negative effects, you can inflict them to your victims with attacks." to player
+				send "&3&lDeterrent: &3The more effects you have, the less damage you take!" to player
+			if {%player's uuid%.gifts::*} contains "tachea":
+				send "&bYou are a Tachea! They are built for exploration and will rarely lose a race!" to player
+				send "&3&lMomentum: &3The longer you sprint, the faster you become!" to player
+				send "&3&lHigh Pressure: &3You mine faster while sprinting!" to player
+				send "&3&lBoing: &3You jump higher while sneaking!" to player
+			if {%player's uuid%.gifts::*} contains "sizer":
+				send "&bYou are a Sizer! They possess the unique ability to manipulate their size!" to player
+				send "&3&lAugment: &3Crouch to spend a small amount of energy and change your size!" to player
+				send "&3&lSmall Form: &3You need less food to survive." to player
+				send "&3&lLarge Form: &3You deal and resist more damage." to player
+			if {%player's uuid%.gifts::*} contains "remedian":
+				send "&bYou are a Remedian! They are survivalists who specialize in healing!" to player
+				send "&3&lAura of Restoration: &3Whenever you eat something, you heal all living things near you!" to player
+				send "&3&lQuick Recovery: &3You can convert your hunger into health by switching your offhand items while sneaking!" to player
+				send "&3&lMiracle: &3You are immune to many negative potion effects!" to player
+			if {%player's uuid%.gifts::*} contains "insectio":
+				send "&bYou are a Insectio! They are nimble creatures who become stronger over time!" to player
+				send "&3&lTiny: &3You're naturally small!" to player
+				send "&3&lMicroscopic: &3Monsters don't attack you unless you're close to them!" to player
+				send "&3&lMetamorphosis: &3Every hour while you are alive, your become stronger!" to player
+				send "&3&l - Stage 1: &3You are immune to fall damage." to player
+				send "&3&l - Stage 2: &3You sprint faster." to player
+				send "&3&l - Stage 3: &3You take less damage." to player
+				send "&3&lMetamorphosis Stage: %{metamorphosis.insectio.%player's uuid%}%"
+				send "&3♥ - Inspiration from ItIsStitch" to player
+			if {%player's uuid%.gifts::*} contains "thorneria":
+				send "&bYou are a Thorneria!" to player
+				send "&3&lDance with Death: &3You gain temporary bursts of speed when below half health." to player
+				send "&3&lPoison Thorn: &3Fully charged hits inflict thorns on your victims. These thorns stop victims from healing and are consumed in the process." to player
+				send "&3&lBarbed Skin: &3Whenever you are damaged by an entity, you deal a portion of the damage back at them." to player
+				send "&3♥ - Inspiration from ItIsStitch" to player
+			if {%player's uuid%.gifts::*} contains "glacia":
+				send "&bYou are a Glacia!" to player
+				send "&3&lFrostbite: &3Fully charged hits raise the frostbite meter of victims. When it gets high enough, it inflicts mining fatigue on the victim." to player
+				send "&3&lFreezelock: &3Fully charged hits raise the freeze meter of victims. When it gets high enough, it stops the victim from switching items for a few seconds." to player
+				send "&3&lBelow Zero: &3Any time you are attacked, you have a chance of giving your attacker the freezing effect." to player
+			if {%player's uuid%.gifts::*} contains "blizzara":
+				send "&bYou are a Blizzara!" to player
+				send "&3&lWinter's Wrath: &3Fully charged hits inflict the freezing effect on your victims." to player
+				send "&3&lFrom the Tundra: &3You can deal damage with snowballs!" to player
+				send "&3&lFrigid: &3Any time you are attacked, you have a chance of applying slowness to your attacker." to player
+			if {%player's uuid%.gifts::*} contains "duala":
+				send "&bYou are a Duala!" to player
+				send "&3&lSwitch: &3Switch your current mode by sneaking and swapping your offhand item." to player
+				send "&3&lMode: Striker" to player
+				send "&3 - Deal 1.2x damage" to player
+				send "&3 - 1.1x attack speed" to player
+				send "&3&lMode: Stalwart " to player
+				send "&3 - Take 0.9x damage" to player
+				send "&3 - 1.5x max health" to player
+				if metadata value "duala:mode" of player is 1:
+					send "&3&lCurrent Mode: Striker" to player
+				else:
+					if metadata value "duala:mode" of player is -1:
+						send "&3&lCurrent Mode: Stalwart" to player
+					else:
+						send "&3&lCurrent Mode: Unselected" to player
+			if {%player's uuid%.gifts::*} contains "witheria":
+				send "&bYou are a Witheria!" to player
+				send "&3&lFrom the Nether: &3You are immune to wither and fire damage. " to player
+				send "&3&lCarve: &3You deal more damage to anything on fire, or with the wither effect. " to player
+				send "&3&lStarheart: &3Whenever you spawn, you receive a random beacon effect. " to player
+				send "&3♥ - Inspiration from Toastyyy__" to player
+			if {%player's uuid%.gifts::*} contains "galaxa":
+				send "&bYou are a Galaxa!" to player
+				send "&3&lStellar: &3Enchanting costs you less experience!" to player
+				send "&3&lSolar: &3During the daytime, you heal more from all sources." to player
+				send "&3&lGravitational Resistance: &3Critical hits do less damage to you!" to player
+			if {%player's uuid%.gifts::*} contains "florith":
+				send "&bYou are a Florith!" to player
+				send "&3&lOvergrowth: &3Bonemeal effects are amplified for you." to player
+				send "&3&lPhotosynthesis: &3During the daytime, you deal more damage." to player
+				send "&3&lNutrients: &3You gain absorption from any food!" to player
+				send "&3♥ - Inspiration from Snowypress" to player
+			if {%player's uuid%.gifts::*} contains "mutatia":
+				send "&bYou are a Mutatia!" to player
+				send "&3&lMixer: &3Fully charged attacks have a chance to activate a random effect!" to player
+				send "&3 - Inflict glowing briefly" to player
+				send "&3 - Slow down your opponent's weapon cooldown" to player
+				send "&3 - Burn your opponent" to player
+				send "&3 - Remove a fraction of your opponent's health" to player
+				send "&3&lSuperbug: &3You are immune to some negative effects!" to player
+				send "&3&lFitness: &3You lose less hunger from sprinting!" to player
+				send "&3♥ - Inspiration from ROM_TED" to player
+			if {%player's uuid%.gifts::*} contains "treasuria":
+				send "&bYou are a Treasuria!" to player
+				send "&3&lMastery: &3Ores that you mine yield more drops." to player
+				send "&3&lPersuasion: &3You gain hero of the village from trading!" to player
+				send "&3&lGolden Diet: &3You gain haste from eating food made of gold!" to player
+# basically makes a gui where u can see all players and their gifts
+command /giftsview:
+	permission: op
+	trigger:
+		set {giftgui.%player%} to chest inventory with 5 rows named "&3Database"
+		add all players to {_playerlist::*}
+		loop size of {_playerlist::*} times:
+			set {_p} to {_playerlist::%loop-value%}
+			set slot loop-value - 1 of {giftgui.%player%} to skull of {_p} with lore "&bGift: %{%{_p}'s uuid%.gifts::*}%"
+		open {giftgui.%player%} to player
+		delete {_playerlist::*}
