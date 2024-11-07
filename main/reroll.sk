@@ -1,0 +1,101 @@
+# all recipes
+on load:
+	remove custom recipe "skbee:wish"
+	remove custom recipe "fari:wish"
+	remove custom recipe "fari:orboflife"
+	set {_i} to nether star named "&5Wish" with lore "&7&oA mysterious item used to change your gift." and "&5&lRIGHT CLICK TO CONSUME"
+	set {_i2} to ender pearl named "&4Orb of Life" with lore "&7&oCrafted from the parts of many living things"
+	set {_i3} to ender pearl named "&4Amplified Orb of Life" with lore "&7&oHolds the remnants of many living things"
+	register shaped recipe for {_i2} using leather, blaze rod, bone, gunpowder, ender pearl, gunpowder, bone, blaze rod, and leather with id "fari:orboflife"
+	register shaped recipe for {_i} using {_i3}, netherite scrap, gold block, netherite scrap, nautilus shell, netherite scrap, gold block, netherite scrap, and {_i3} with id "fari:wish"
+	register shaped recipe for {_i3} using diamond, {_i2}, diamond, {_i2}, wither skeleton skull, {_i2}, diamond, {_i2}, and diamond with id "fari:amplifiedorboflife"
+# prevents player from throwing orbs of life
+on right click:
+	name of player's tool is "&4Orb of Life":
+		cancel event
+	name of player's offhand tool is "&4Orb of Life":
+		cancel event
+	name of player's tool is "&4Amplified Orb of Life":	
+		cancel event
+	name of player's offhand tool is "&4Amplified Orb of Life":
+		cancel event
+# possible gifts from reroll, any string works, should be easy to configure
+on load:
+	delete {possibleGifts::*}
+	add "controlix" to {possibleGifts::*}
+	add "dominar" to {possibleGifts::*}
+	add "umbri" to {possibleGifts::*}
+# reroll function
+function giftReroll(p: player):
+# this snippet guarantees you can't get a duplicate gift 
+	set {_possibleRerollGifts::*} to {possibleGifts::*}
+	loop size of {%{_p}'s uuid%.gifts::*} times:
+		remove {%{_p}'s uuid%.gifts::%loop-value%} from {_possibleRerollGifts::*}
+	delete {%{_p}'s uuid%.gifts::*} 
+# if you want people to have a chance to get duplicate gifts, replace {_possibleRerollGifts::*} with {possibleGifts::*}
+# this gets a random gift, adds it to the player
+	set {_r} to random element out of {_possibleRerollGifts::*}
+	add {_r} to {%{_p}'s uuid%.gifts::*}
+# this resets attributes, it MAY conflict with other scripts that modify attributes!
+	resetPlayerAttributes({_p})
+# this resets effects, it MAY conflict with other scripts that modify effects!	
+	clear all potion effects of {_p}
+# insectio-specific, resets metamorphosis level + sets size, default size is configurable inside insectio.sk
+	{_r} is "insectio":
+		set generic scale attribute of {_p} to {insectio.defaultSize}
+		set {metamorphosis.insectio.%{_p}'s uuid%} to 0
+# witheria-specific, randomizes the perm effect given
+	{_r} is "witheria":
+		witheriaEffect({_p})
+# command to reroll a player's gift		
+command /giftreroll <player>:
+	permission: op
+	trigger:
+		giftReroll(arg-1)
+		send "&byou have rerolled %arg-1%'s gift!" to player
+# reroll item, be careful with this if player's can give items coloured names!
+on right click:
+	name of player's tool is "&5Wish":
+		cancel event
+		giftReroll(player)
+		remove 1 of player's held item from player
+		send "&cYou feel like a part of you is missing, but only for a second..." to player
+		wait 2 seconds
+# visual & sound effects, purely cosmetic lol
+		set {_loc} to location 1 block above player	
+		play sound "block.beacon.activate" at volume 100 at {_loc} to all players
+		loop 90 times:
+			set {_v} to spherical vector with radius 3, yaw loop-value * 4, pitch 0
+			set {_v2} to spherical vector with radius 3, yaw loop-value * 4 + 90, pitch 0
+			set {_v3} to spherical vector with radius 3, yaw loop-value * 4 + 180, pitch 0
+			set {_v4} to spherical vector with radius 3, yaw loop-value * 4 + 270, pitch 0
+			make 1 of electric spark at location loop-value / 25 above player ~ {_v} with extra 0
+			make 1 of electric spark at location loop-value / 25 above player ~ {_v2} with extra 0
+			make 1 of electric spark at location loop-value / 25 above player ~ {_v3} with extra 0
+			make 1 of electric spark at location loop-value / 25 above player ~ {_v4} with extra 0
+			wait 1 tick
+# auto gives the recipes when a player joins			
+on join:
+	unlock recipe "fari:orboflife" for player
+	unlock recipe "fari:amplifiedorboflife" for player
+	unlock recipe "fari:wish" for player
+# removes all recipes
+command /removerecipes:
+	permission: op
+	trigger:
+		remove custom recipe "skbee:wish"
+		remove custom recipe "fari:wish"
+		remove custom recipe "fari:orboflife"
+		remove custom recipe "fari:amplifiedorboflife"
+		remove custom recipe "fari:stoneofawakening"
+# purely optional log to record when people craft wishes		
+on craft:
+	event-string contains "Wish":
+		log "%player% crafted a wish" to "wish.log"
+# easy way to get a wish without having to craft one
+command /freewish:
+	permission: op
+	trigger:
+		set {_w} to nether star named "&5Wish" with lore "&7&oA mysterious item used to change your gift." and "&5&lRIGHT CLICK TO CONSUME" #with custom nbt from "{fari:reroll}"
+		add nbt from "{fari:reroll}" to custom nbt of {_w}
+		give player {_w}
