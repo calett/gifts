@@ -1,0 +1,18 @@
+# freeze ability 
+# snowball damage ability
+on damage:
+	{%attacker's uuid%.gifts::*} contains "blizzara":
+		attacker's attack cooldown is 1:
+			freeze time of victim < 3 seconds:
+				add 3 seconds to freeze time of victim
+		damage cause is projectile:
+			event-projectile is snowball:
+				victim's health > 1:
+					subtract 0.5 from victim's health
+# chance of applying slowness ability
+on damage:
+	{%victim's uuid%.gifts::*} contains "blizzara":
+		damage cause is attack:
+			attacker's attack cooldown is 1:
+				chance of 25%:
+					apply potion of slowness of tier 4 to attacker for 6 seconds

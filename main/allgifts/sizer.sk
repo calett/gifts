@@ -1,0 +1,35 @@
+# ability changes size
+on sneak toggle:
+	{%player's uuid%.gifts::*} contains "sizer":
+		if player is sneaking:
+			player's food level > 0
+			remove 0.5 from food level of player
+			play sound "minecraft:entity.bat.takeoff" at player to all players
+			if {sizer.%player's uuid%} is not set:
+				set {sizer.%player's uuid%} to 0
+			if {sizer.%player's uuid%} = 5:
+				set {sizer.%player's uuid%} to 0
+			add 1 to {sizer.%player's uuid%}
+			if {sizer.%player's uuid%} = 5:
+				set {sizer.%player's uuid%} to 1
+			if {sizer.%player's uuid%} = 1:
+				set generic scale attribute of player to 0.4
+			if {sizer.%player's uuid%} = 2:
+				set generic scale attribute of player to 1
+			if {sizer.%player's uuid%} = 3:
+				set generic scale attribute of player to 1.5
+			if {sizer.%player's uuid%} = 4:
+				set generic scale attribute of player to 1
+# if large size, deal more damage
+on damage:
+	{sizer.%attacker's uuid%} = 3:
+		set damage to damage * 1.5
+# if large size, take less damage
+on damage:
+	{sizer.%victim's uuid%} = 3:
+		set damage to damage * 0.75
+# on consume, if small size, heal more 
+on eat:
+	{sizer.%player's uuid%} = 1:
+		add 2 to food level of player
+		add 1 to health of player

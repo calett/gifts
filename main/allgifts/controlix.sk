@@ -1,0 +1,35 @@
+# item cooldown ability
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "controlix":
+		attacker's attack cooldown is 1:
+			attacker's held item is not air:
+				chance of 25%:
+					set item cooldown of victim's held item for victim to 1 second
+					play sound "minecraft:entity.player.attack.knockback" at victim to all players
+# chance of changing the victim's slot ability
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "controlix":
+		if damage cause is not projectile:
+			chance of 33%:
+				set {_r} to random integer from 0 to 8
+				set victim's selected hotbar slot to slot {_r} of victim
+				play sound "minecraft:entity.slime.jump" at victim to all players
+				delete {_r}
+# arrow attracts victims back ability
+# more visual effects!
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "controlix":
+		damage cause is a projectile:
+			event-projectile is a arrow:
+				set {_loc} to location 1 block above victim
+				set {_loc2} to location 1 block above attacker
+				set {_v} to vector from {_loc} to {_loc2}
+				set {_d} to distance between {_loc} and {_loc2}
+				push victim {_v} with force 1.5 + {_d} / 5
+				loop ({_d} / 0.2) times:
+					set vector length of {_v} to (loop-value*0.2)
+					draw 1 of dust using dustOption(rgb(loop-value*{_d}/4,0,0),1) at {_loc} ~ {_v}
+				delete {_v}
+				delete {_d}
+				delete {_loc}
+				delete {_loc2}

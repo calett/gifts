@@ -1,0 +1,29 @@
+# chance to double experience gained
+on player pickup xp:
+	if {%player's uuid%.gifts::*} contains "mystif":
+		add event-number to player's total experience
+# deals more damage based on experience
+# the formula is 0.5*sqrt(level), maxes out at 20 damage
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "mystif":
+		if attack cooldown of attacker is 1:
+			if attacker's held item is wooden sword or stone sword or golden sword or iron sword or diamond sword or netherite sword or trident or wooden axe or stone axe or iron axe or diamond axe or gold axe or netherite axe:
+				set {_i} to sqrt(attacker's level) / 2
+				if {_i} > 20:
+					set {_i} to 20
+				add {_i} to damage
+				set {_y} to victim's yaw
+				loop 90 times:
+					set {_v} to spherical vector with radius (attacker's level / 15)+0.5, yaw loop-value*4, pitch victim's pitch 
+					draw 1 of dust using dustOption(yellow, 1) at location 1 above victim ~ {_v}
+				delete {_v}
+				delete {_y}
+				delete {_i}
+#chance to negate damage based on levels				
+on damage:
+	if {%victim's uuid%.gifts::*} contains "mystif":
+		chance of ((sqrt(victim's level))+20)%:
+			cancel event
+			draw 1 of flash at victim
+			play sound "minecraft:block.beacon.activate" at victim
+			

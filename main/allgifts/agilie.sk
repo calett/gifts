@@ -1,0 +1,19 @@
+# agilie ability, removes hunger & pushes player
+on sneak toggle:
+	if {%player's uuid%.gifts::*} contains "agilie":
+		if player's food level > 0:
+			if player is sprinting:
+				push player in direction of player with velocity 0.75
+				set player's food level to player's food level - 0.5
+			if player is swimming:
+				push player in direction of player with velocity 0.75
+# cancels fall damage
+on damage:
+	if {%victim's uuid%.gifts::*} contains "agilie":
+		if damage cause is fall:
+			cancel event
+# applies speed to player upon receiving damage
+on damage:
+	if {%victim's uuid%.gifts::*} contains "agilie":
+		if damage cause is not fall:
+			apply speed potion of tier 2 without any particles whilst hiding the potion icon to the victim for 2 seconds 

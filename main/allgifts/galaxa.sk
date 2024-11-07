@@ -1,0 +1,17 @@
+# scrapped gift idea
+# decreased enchant costs
+on enchant prepare:
+	{%player's uuid%.gifts::*} contains "galaxa":
+		set the cost of enchant offer 1 to (the cost of enchant offer 1) * 0.5
+		set the cost of enchant offer 2 to (the cost of enchant offer 2) * 0.6
+		set the cost of enchant offer 3 to (the cost of enchant offer 3) * 0.8
+# extra healing during the daytime		
+on heal:
+	{%player's uuid%.gifts::*} contains "galaxa":
+		time is between 7:00 and 17:00:
+			heal player by 0.25
+# more damage resistance against critical hits
+on damage:
+	{%victim's uuid%.gifts::*} contains "galaxa":
+		hit is critical:
+			set damage to damage * 0.66

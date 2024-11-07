@@ -1,0 +1,62 @@
+# stealing potion effect ability
+# visual effects! these were a pain to make
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "chemice":
+		if attacker's attack cooldown is 1:
+			if victim has potion strength:
+				apply potion of strength 2 to attacker for 2 seconds
+				loop 20 times:
+					set {_v} to spherical vector with radius 0.5, yaw loop-value*18, pitch attacker's pitch 
+					draw 1 of dust using dustOption(rgb(100,78,0),1) at location at attacker ~ {_v} with extra 0
+			if victim has potion speed:
+				apply potion of speed 2 to attacker for 2 seconds
+				loop 20 times:
+					set {_v} to spherical vector with radius 0.6, yaw loop-value*18, pitch attacker's pitch 
+					draw 1 of dust using dustOption(rgb(20,92,100),1) 0.25 block above location of attacker ~ {_v} with extra 0
+			if victim has potion fire resistance:
+				apply potion of fire resistance to attacker for 3 seconds
+				loop 20 times:
+					set {_v} to spherical vector with radius 0.7, yaw loop-value*18, pitch attacker's pitch 
+					draw 1 of dust using dustOption(rgb(100,60,0),1) 0.5 block above location of attacker ~ {_v} with extra 0
+			if victim has potion regeneration:
+				apply potion of regeneration 2 to attacker for 2 seconds
+				loop 20 times:
+					set {_v} to spherical vector with radius 0.7, yaw loop-value*18, pitch attacker's pitch 
+					draw 1 of dust using dustOption(rgb(80,36,37),1) 0.75 block above location of attacker ~ {_v} with extra 0
+			if victim has potion resistance:
+				apply potion of resistance 2 to attacker for 2 seconds
+				loop 20 times:
+					set {_v} to spherical vector with radius 0.6, yaw loop-value*18, pitch attacker's pitch 
+					draw 1 of dust using dustOption(rgb(54,50,89),1) 1 block above location of attacker ~ {_v} with extra 0
+			if victim has potion absorption:
+				apply potion of absorption 2 to attacker for 2 seconds
+				loop 20 times:
+					set {_v} to spherical vector with radius 0.5, yaw loop-value*18, pitch attacker's pitch 
+					draw 1 of dust using dustOption(rgb(22,36,77),1) 1.25 block above location of attacker ~ {_v} with extra 0
+			if victim's active potion effects is set:
+				play sound "minecraft:block.glass.break" at victim
+			delete {_v}
+# player applies negative effects they have
+# more visual effects! yay!
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "chemice":
+		if attacker's attack cooldown is 1:
+			if attacker has potion slowness:
+				apply potion of slowness 2 to victim for 2 seconds
+				loop 20 times:
+					set {_v} to spherical vector with radius 0.5, yaw loop-value*18, pitch victim's pitch 
+					draw 1 of dust using dustOption(rgb(139,175,224),1) 0.5 block above location of victim ~ {_v} with extra 0
+			if attacker has potion poison:
+				apply potion of poison 2 to victim for 2 seconds
+				loop 20 times:
+					set {_v} to spherical vector with radius 0.5, yaw loop-value*18, pitch victim's pitch 
+					draw 1 of dust using dustOption(rgb(135,163,99),1) 1.5 block above location of victim ~ {_v} with extra 0
+# damage reduction formula
+# player takes less damage the more effects they have
+on damage:
+	if {%victim's uuid%.gifts::*} contains "chemice":
+		set {_i} to 0
+		loop potion effects of victim:
+			add 1 to {_i}
+		set {_i} to {_i} / 3
+		subtract {_i} from damage 

@@ -1,0 +1,30 @@
+# heal nearby entities when eating
+on eat:
+	if {%player's uuid%.gifts::*} contains "remedian":
+		player is sneaking:
+			loop all entities in radius 5 of player:
+				loop-entity is not item or boat:
+					set {_d} to distance between player and loop-entity
+					set {_v} to vector from player to loop-entity
+					set {_loc} to location of player
+					loop ({_d} / 0.2) times:
+						set vector length of {_v} to (loop-value-2*0.2)
+						draw 1 of happy villager at {_loc} ~ {_v}
+					heal loop-entity by 2
+# heal self at the cost of hunger
+on swap hand items:
+	player is sneaking:
+		if {%player's uuid%.gifts::*} contains "remedian":
+			player's food level > 0:
+				player's health < player's maximum health:
+					cancel event
+					heal player by 2
+					subtract 1 from food level of player
+					play sound "minecraft:block.amethyst_cluster.break" at player to all players
+# all the effects remedian is immune to, configurable
+on load:
+	set {remedian.immune::*} to weakness, poison, blindness, slowness, mining fatigue, nausea, wither, and hunger
+on potion effect added:
+	if {%player's uuid%.gifts::*} contains "remedian":
+		{remedian.immune::*} contains event-potioneffecttype:
+			cancel event

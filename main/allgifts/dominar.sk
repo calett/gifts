@@ -1,0 +1,48 @@
+# chance to negate damage ability + visual effects!
+on damage:
+	if {%victim's uuid%.gifts::*} contains "dominar":
+		if victim is a player:
+			if attacker is a player:
+				if health of attacker < health of victim:
+					chance of 25%:
+						cancel event
+						play sound "minecraft:item.shield.block" at victim to all players
+						set {_y} to victim's yaw
+						loop 360 times:
+							set {_v} to spherical vector with radius 2, yaw {_y} + victim's yaw, pitch loop-value
+							draw 1 of dust using dustOption(rgb(51,255,233), 1) at location 1 above victim ~ {_v}
+# chance of reflecting damage ability + visual effects!							
+on damage:
+	if {%victim's uuid%.gifts::*} contains "dominar":
+		if health of attacker > health of victim:
+			chance of 40%:
+				if health of attacker > final damage + 0.5:
+					subtract final damage from health of attacker
+					play sound "minecraft:entity.evoker.prepare_attack" at victim to all players
+					set {_y} to victim's yaw
+					loop 360 times:
+						set {_v} to spherical vector with radius 2, yaw {_y} + victim's yaw, pitch loop-value
+						draw 1 of dust using dustOption(rgb(255,0,0), 1) at location 1 above victim ~ {_v}
+# more damage with axes. i know this is horribly made						
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "dominar":
+		if attacker's attack cooldown is 1:
+			if attacker's tool is wooden axe:
+				create fake explosion 1 block above event-location
+				subtract 0.5 from victim's health
+			if attacker's tool is stone axe:
+				create fake explosion 1 block above event-location
+				subtract 0.5 from victim's health
+			if attacker's tool is iron axe:
+				create fake explosion 1 block above event-location
+				subtract 0.5 from victim's health
+			if attacker's tool is gold axe:
+				create fake explosion 1 block above event-location
+				subtract 0.5 from victim's health
+			if attacker's tool is diamond axe:
+				create fake explosion 1 block above event-location
+				subtract 0.5 from victim's health
+			if attacker's tool is netherite axe:
+				create fake explosion 1 block above event-location
+				subtract 0.5 from victim's health
+			

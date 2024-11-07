@@ -1,0 +1,33 @@
+# switch mode ability, uses metadata 
+# visual effects!
+on swap hand items:
+	if {%player's uuid%.gifts::*} contains "duala":
+		player is sneaking:
+			if player's food level > 0:
+				resetPlayerAttributes(player)
+				subtract 0.5 from player's food level
+				play sound "minecraft:entity.allay.ambient_without_item" at player to all players
+				metadata value "duala:mode" of player is not set:
+					set metadata value "duala:mode" of player to 1
+				else:
+					set metadata value "duala:mode" of player to metadata value "duala:mode" of player * -1
+				metadata value "duala:mode" of player is 1:
+					loop 90 times:
+						set {_v} to spherical vector with radius 2, yaw loop-value*4, pitch player's pitch 
+						draw 1 of dust using dustOption(red,1) at location 1 above player ~ {_v} with extra 0
+					set attack speed attribute of player to 4.4
+				metadata value "duala:mode" of player is -1:
+					loop 90 times:
+						set {_v} to spherical vector with radius 2, yaw loop-value*4, pitch player's pitch 
+						draw 1 of dust using dustOption(blue,1) at location 1 above player ~ {_v} with extra 0
+					set max health attribute of player to 30
+# boosts damage for offensive duala mode
+# increases damage reduction for defensive duala mode
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "duala":
+		metadata value "duala:mode" of attacker is 1:
+			set damage to damage * 1.2
+	if {%victim's uuid%.gifts::*} contains "duala":
+		metadata value "duala:mode" of attacker is -1:
+			set damage to damage * 0.9
+		

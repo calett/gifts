@@ -1,0 +1,37 @@
+# on kill, makes muriace level go up
+on death:
+	if {%attacker's uuid%.gifts::*} contains "muriace":
+		if {muriace.%attacker's uuid%} is not set:
+			set {muriace.%attacker's uuid%} to 1
+		if {muriace.%attacker's uuid%} < 1.5:
+			set {_i} to random integer from 1 to 5
+			set {_i} to {_i} / 10
+			add {_i} to {muriace.%attacker's uuid%}
+			if {muriace.%attacker's uuid%} > 1.5:
+				set {muriace.%attacker's uuid%} to 1.5
+			delete {_i}
+# deal more damage based on muriace level	
+# visual effects!
+on damage:
+	if {muriace.%attacker's uuid%} > 1:
+		set damage to damage * {muriace.%attacker's uuid%}
+		subtract 0.35 from {muriace.%attacker's uuid%}
+		play sound "minecraft:entity.wither.hurt" at victim to all players
+		loop 90 times:
+			set {_v} to spherical vector with radius 1, yaw loop-value*4, pitch victim's pitch 
+			draw 1 of sculk soul at location 1 above victim ~ {_v} with extra 0
+		delete {_v}
+		delete {_y}
+# chance to not die
+on resurrection attempt:
+	if {%event-entity's uuid%.gifts::*} contains "muriace":
+		chance of 33%:
+			uncancel the event
+# positive effects upon respawn			
+on respawn:
+	wait 1 second
+	if {%player's uuid%.gifts::*} contains "muriace":
+		apply potion of saturation 5 to player for 1 seconds
+		apply potion of absorption 5 to player for 60 seconds
+		apply potion of speed 2 to player for 60 seconds
+		apply potion of jump boost 2 to player for 60 seconds

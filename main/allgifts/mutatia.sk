@@ -1,0 +1,28 @@
+# the wildcard ability
+on damage:
+	{%attacker's uuid%.gifts::*} contains "mutatia":
+		attacker's attack cooldown is 1:
+			event-damage cause is attack:
+				chance of 10%:
+					victim does not have potion glowing:
+						apply glowing to victim for 5 seconds
+				chance of 10%:
+					apply mining fatigue to victim for 1 second
+				chance of 10%:
+					set victim on fire for 2 seconds
+				chance of 10%:
+					damage victim by (victim's health) / 2.5
+# chance to negate certain negative effects
+on potion effect added:
+	{%player's uuid%.gifts::*} contains "mutatia":
+		event-potioneffecttype = poison:
+			cancel event
+		event-potioneffecttype = weakness:
+			cancel event
+		event-potioneffecttype = slowness:
+			cancel event
+# chance to reduce hunger loss
+on hunger meter change:
+	{%player's uuid%.gifts::*} contains "mutatia":
+		chance of 50%:
+			add 0.5 to player's hunger

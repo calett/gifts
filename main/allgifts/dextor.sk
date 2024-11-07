@@ -1,0 +1,23 @@
+# spend hunger to repair on offhand swap ability
+on swap hand items:
+	if {%player's uuid%.gifts::*} contains "dextor":
+		if player's food level > 0:
+			if durability of player's held item is not 0:
+				if player is not sneaking:
+					chance of 50%:
+						cancel event
+						repair player's held item by 10
+						set player's food level to player's food level - 0.5
+						play sound "minecraft:block.anvil.place" at player to all players
+# gain haste from mining a block ability CAN STACK
+on break:
+	if {%player's uuid%.gifts::*} contains "dextor":
+		if event-block is not water or lava or powder snow:
+			apply haste potion of tier 3 without any particles whilst hiding the potion icon to the player for 1.25 second
+# gain strength when hitting something with fist ability			
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "dextor":
+		if attacker's attack cooldown is 1:
+			if hit is critical:
+				if attacker's held item is air:
+					apply strength potion of tier 1 without any particles whilst hiding the potion icon to the attacker for 3.5 second

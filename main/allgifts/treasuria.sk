@@ -1,0 +1,22 @@
+# increases ore drops
+on break:
+	if {%player's uuid%.gifts::*} contains "treasuria":
+		enchantments of player's tool does not contain silk touch 1:
+			event-block is any ore:
+				event-block is not ancient debris:
+					drop drops of block at event-location
+# gives hero of the village after trading
+on player trade:
+	if {%player's uuid%.gifts::*} contains "treasuria":
+		apply hero of the village to player for 15 seconds
+		chance of 10%:
+			apply hero of the village of tier 2 to player for 15 seconds
+# applies haste when eating gold food
+on eat:
+	if {%player's uuid%.gifts::*} contains "treasuria":
+		event-item is golden carrot:
+			player does not have potion haste:
+				apply haste of tier 2 to player for 15 seconds
+		event-item is golden apple:
+			player does not have potion haste:
+				apply haste of tier 2 to player for 30 seconds

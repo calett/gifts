@@ -1,0 +1,21 @@
+# experience bonus ability
+on player pickup xp:
+	if {%player's uuid%.gifts::*} contains "cosmur":
+		add event-number to total experience of player
+		chance of 50%:
+			add event-number / 2 to total experience of player
+		chance of 10%:
+			add event-number / 2 to total experience of player
+		chance of 1%:
+			add event-number * 2 to total experience of player
+# chance to negate damage at night ability
+on damage:
+	if {%victim's uuid%.gifts::*} contains "cosmur":
+		if time in victim's world is between 18:00 and 6:00:
+			chance of 40%:
+				cancel event
+				play sound "minecraft:entity.ender_dragon.flap" at victim to all players
+# fully heal when switching dimensions
+on portal:
+	if {%player's uuid%.gifts::*} contains "cosmur":
+		heal player by 20

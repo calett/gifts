@@ -1,0 +1,43 @@
+# acceleration ability
+on sprint toggle:
+	player is sprinting:
+		if {%player's uuid%.gifts::*} contains "tachea":
+			if {momentum.tachea.%player's uuid%} is not false:
+				set {momentum.tachea.%player's uuid%} to false
+				while player is sprinting:
+					if generic movement speed attribute of player < 0.15:
+						add 0.0025 to generic movement speed attribute of player
+						play sound "minecraft:entity.ender_dragon.flap" at player to all players
+						loop 30 times:
+							set {_v} to spherical vector with radius 1, yaw loop-value*12, pitch player's pitch 
+							draw 1 of dust using dustOption(light blue, 1) at location 0.5 block above player ~ {_v}
+						delete {_v}
+					wait 1 second
+				set {momentum.tachea.%player's uuid%} to true
+# resets speed for momentum ability
+on sprint toggle:
+	player is not sprinting:
+		if {%player's uuid%.gifts::*} contains "tachea":
+			set generic movement speed attribute of player to 0.1
+# gain haste when breaking blocks while sprinting
+on break:
+	if {%player's uuid%.gifts::*} contains "tachea":
+		player is sprinting:
+			player does not have potion haste:
+				apply potion of haste of tier 1 to player for 4 seconds
+				play sound "minecraft:block.grindstone.use" at player to all players
+			player has potion haste:
+				amplifier of haste of player < 20:
+					apply potion of haste of tier (amplifier of haste of player + 1) to player for 1 second
+					play sound "minecraft:block.grindstone.use" at player to all players
+# does not allow haste for pvp
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "tachea":
+		amplifier of haste of attacker > 2:
+			remove haste from potion effects of attacker
+# boosted jump ability
+on jump:
+	if {%player's uuid%.gifts::*} contains "tachea":
+		player is sneaking:
+			wait 1 tick
+			push player upwards with velocity (player's health / player's maximum health)

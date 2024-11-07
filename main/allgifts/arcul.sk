@@ -1,0 +1,26 @@
+# turn stick into arrow ability
+on right click:
+	if {%player's uuid%.gifts::*} contains "arcul":
+		if player's held item is stick:
+			if player is sneaking:
+				remove 1 of player's held item from player
+				shoot arrow from player with velocity 1
+# turn flint into fire ability
+on right click:
+	if {%player's uuid%.gifts::*} contains "arcul":
+		if player's held item is flint:
+			if player is sneaking:
+				remove 1 of player's held item from player
+				loop all entities in radius 5 of player:
+					ignite loop-entity for 3 seconds
+				extinguish player
+# chance to deal 50% of an entity's hp
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "arcul":
+		if attacker's attack cooldown is 1:
+			if hit is critical:
+				if victim's health > victim's max health / 2:
+					if victim is not a ender dragon:
+						if victim is not a wither:
+							chance of 10%:
+								set victim's health to victim's max health - victim's max health / 2

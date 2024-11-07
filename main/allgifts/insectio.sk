@@ -1,0 +1,56 @@
+# configurable, this corresponds to the scale attribute
+on load:
+	set {insectio.defaultSize} to 0.45
+# entities don't aggro as often to player with this gift
+on entity target:
+	if {%target's uuid%.gifts::*} contains "insectio":
+		distance between target and event-entity > 8:
+			reset target of event-entity
+# sets scale accordingly			
+on join:
+	if {%player's uuid%.gifts::*} contains "insectio":
+		wait 2 seconds
+		set generic scale attribute of player to {insectio.defaultSize}
+# sets scale, resets metamorphosis level
+on respawn:
+	if {%player's uuid%.gifts::*} contains "insectio":
+		set generic scale attribute of player to {insectio.defaultSize}
+		set {metamorphosis.insectio.%player's uuid%} to 0
+# somewhat optimized way to update metamorphosis level
+every minute:
+	loop all players:
+		if {%loop-player's uuid%.gifts::*} contains "insectio":
+			if time_since_death statistic of loop-player is not set:
+				set {_t} to (play_one_minute statistic of loop-player)/72000 #hours
+			else:
+				set {_t} to (time_since_death statistic of loop-player)/72000 #hours
+			if {_t} > 1:
+				{metamorphosis.insectio.%loop-player's uuid%} < 1:
+					set {metamorphosis.insectio.%loop-player's uuid%} to 1
+					play sound "minecraft:entity.wither.ambient" at loop-player to all players
+			if {_t} > 2:
+				{metamorphosis.insectio.%loop-player's uuid%} < 2:
+					set {metamorphosis.insectio.%loop-player's uuid%} to 2
+					play sound "minecraft:entity.wither.ambient" at loop-player to all players
+			if {_t} > 3:
+				{metamorphosis.insectio.%loop-player's uuid%} < 3:
+					set {metamorphosis.insectio.%loop-player's uuid%} to 3
+					play sound "minecraft:entity.wither.ambient" at loop-player to all players
+# metamorphosis level 1
+on damage:
+	if {%victim's uuid%.gifts::*} contains "insectio":
+		damage cause is fall:
+			{metamorphosis.insectio.%victim's uuid%} > 0:
+				cancel event
+# metamorphosis level 2
+on sprint toggle:
+	player is sprinting:
+		if {%player's uuid%.gifts::*} contains "insectio":	
+			{metamorphosis.insectio.%player's uuid%} > 1:
+				player does not have potion speed:
+					apply potion of speed to player for 15 seconds
+# metamorphosis level 3
+on damage:
+	if {%victim's uuid%.gifts::*} contains "insectio":
+		{metamorphosis.insectio.%victim's uuid%} > 2:
+			set damage to damage * 0.8

@@ -1,0 +1,30 @@
+# gain speed when low hp ability
+on damage:
+	if {%victim's uuid%.gifts::*} contains "thorneria":
+		victim's health <= (victim's max health) / 2:
+			victim does not have potion speed:
+				apply potion of speed of tier 3 to victim for 5 seconds
+# thorneria thorns ability, applies thorns to victims
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "thorneria":
+		attack cooldown of attacker is 1:
+			metadata value "thorneria:thorns" of victim is not set:
+				set metadata value "thorneria:thorns" of victim to 1
+				play sound "minecraft:entity.bee.sting" at victim to all players
+			else:
+				metadata value "thorneria:thorns" of victim < 5:
+					set metadata value "thorneria:thorns" of victim to (1 + metadata value "thorneria:thorns" of victim)
+					play sound "minecraft:entity.bee.hurt" at victim to all players
+# when a victim heals while having thorns applied, thorns cancel out a certain amount of hearts each
+on heal:
+	metadata value "thorneria:thorns" of event-entity is set:
+		metadata value "thorneria:thorns" of event-entity > 1:
+			set metadata value "thorneria:thorns" of event-entity to (metadata value "thorneria:thorns" of event-entity - 1)
+			cancel event
+			play sound "minecraft:entity.bee.sting" at event-entity to all players
+# when attacked, thorneria reflects a fraction of the damage back
+on damage:
+	if {%victim's uuid%.gifts::*} contains "thorneria":
+		victim is not blocking:
+			damage attacker by (damage / 8)
+			play sound "minecraft:entity.bee.sting" at attacker to all players

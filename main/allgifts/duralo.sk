@@ -1,0 +1,86 @@
+# durability steal ability, intended to only work with weapons
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "duralo":
+		if attacker's attack cooldown is 1:
+			if attacker's held item is wooden sword or stone sword or golden sword or iron sword or diamond sword or netherite sword or trident or wooden axe or stone axe or iron axe or diamond axe or gold axe or netherite axe or bow:
+				chance of 50%:
+					if victim's held item is wooden sword or stone sword or golden sword or iron sword or diamond sword or netherite sword or trident or wooden axe or stone axe or iron axe or diamond axe or gold axe or netherite axe or bow:
+						set {_i} to random integer from 1 to 5
+						if {_i} + durability of attacker's tool > maximum durability of attacker's tool:
+							set durability of attacker's tool to maximum durability of attacker's tool
+						else:
+							add {_i} to durability of attacker's tool
+						subtract {_i} from durability of victim's tool
+						play sound "minecraft:block.anvil.place" at attacker
+						loop 90 times:
+							set {_v} to spherical vector with radius 1, yaw loop-value*4, pitch victim's pitch 
+							draw 1 of infested at location 1 above victim ~ {_v} with extra 0
+						delete {_v}
+						delete {_y}
+						delete {_i}
+# gain durability on consumption of food ability
+# this works with drinkables too
+# a ton of visual effects
+on eat:
+	if {%player's uuid%.gifts::*} contains "duralo":
+		wait 5 tick
+		set {_i} to random integer from 1 to 10
+		chance of 50%:
+			set {_i} to random integer from 10 to 20
+		chance of 10%:
+			set {_i} to random integer from 20 to 50
+		if player's helmet is set:
+			if {_i} + durability of player's helmet > maximum durability of player's helmet:
+				set durability of player's helmet to maximum durability of player's helmet
+			else:
+				add {_i} to durability of player's helmet
+		if player's chestplate is set:
+			if {_i} + durability of player's chestplate > maximum durability of player's chestplate:
+				set durability of player's chestplate to maximum durability of player's chestplate
+			else:
+				add {_i} to durability of player's chestplate
+		if player's leggings is set:
+			if {_i} + durability of player's leggings > maximum durability of player's leggings:
+				set durability of player's leggings to maximum durability of player's leggings
+			else:
+				add {_i} to durability of player's leggings
+		if player's boots is set:
+			if {_i} + durability of player's boots > maximum durability of player's boots:
+				set durability of player's boots to maximum durability of player's boots
+			else:
+				add {_i} to durability of player's boots
+		loop 10 times:
+			play sound "minecraft:block.amethyst_cluster.place" at player
+		delete {_i}
+		loop 45 times:
+			set {_v} to spherical vector with radius 1, yaw loop-value*8, pitch player's pitch 
+			draw 1 of infested at location at player ~ {_v} with extra 0
+		loop 45 times:
+			set {_v} to spherical vector with radius 1.5, yaw loop-value*8, pitch player's pitch 
+			draw 1 of infested at location 1 above player ~ {_v} with extra 0
+		loop 45 times:
+			set {_v} to spherical vector with radius 1, yaw loop-value*8, pitch player's pitch 
+			draw 1 of infested at location 2 above player ~ {_v} with extra 0
+		delete {_v}
+# heal when losing durability ability		
+on item damage:
+	if {%player's uuid%.gifts::*} contains "duralo":
+		heal player by 0.05
+		loop 5 times:
+			set {_v} to spherical vector with radius 0.5, yaw loop-value*72, pitch player's pitch 
+			draw 1 of enchanted hit at location at player ~ {_v} with extra 0
+		delete {_v}
+# for the visual effects
+function drawLine(pos1: location, pos2: location):
+	set {_distance} to distance between {_pos1} and {_pos2}
+	set {_particleNum} to round({_distance} / 0.5)
+	set {_vector} to vector between {_pos1} and {_pos2}
+	set vector length of {_vector} to {_distance} / {_particleNum}
+	set {_loc} to {_pos1}
+	loop {_particleNum} + 1 times:
+		draw 1 enchanted hit at {_loc} with extra 0 to all players
+		set {_loc} to {_loc} ~ {_vector}
+# easter egg 
+on command "/quack":
+	player's uuid contains "f4057700-143d-4654-905b-7b68d8a93a":
+		send "quack" to all players

@@ -1,0 +1,46 @@
+# configurable, possible effects for witheria to get
+on load:
+	delete {witheria.effects::*}
+	add speed to {witheria.effects::*}
+	add haste to {witheria.effects::*}
+	add resistance to {witheria.effects::*}
+	add jump boost to {witheria.effects::*}
+	add strength to {witheria.effects::*}
+# function used in reroll script
+function witheriaEffect(p: player):
+	set {_e} to random element out of {witheria.effects::*}
+	apply {_e} to {_p} for 9999 days
+# witheria is immune to fire & wither damage
+on damage:
+	if {%victim's uuid%.gifts::*} contains "witheria":
+		event-damage cause is burning:
+			cancel event
+		event-damage cause is fire:
+			cancel event
+		event-damage cause is lava:
+			cancel event
+		event-damage cause is wither effect:
+			cancel event
+# witheria deals more damage while burning
+# witheria deals more damage while having wither effect
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "witheria":
+		victim is on fire:
+			set damage to damage * 1.2
+		victim has potion wither:
+			set damage to damage * 1.15
+# on respawn, apply witheria effect
+on respawn:
+	if {%player's uuid%.gifts::*} contains "witheria":
+		wait 5 ticks
+		witheriaEffect(player)
+# if player's witheria effect was somehow lost, a new one is given when they rejoin
+on join:
+	if {%player's uuid%.gifts::*} contains "witheria":
+		wait 5 ticks
+		set {_t} to 0
+		loop player's potion effects:
+			if potion effect duration of loop-potioneffect is more than 1 year:
+				add 1 to {_t}
+		if {_t} is 0:
+			witheriaEffect(player)

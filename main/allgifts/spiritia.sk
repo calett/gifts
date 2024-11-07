@@ -1,0 +1,19 @@
+# invisibility when damage ability
+on damage:
+	if {%victim's uuid%.gifts::*} contains "spiritia":
+		apply invisibility potion of tier 3 without any particles whilst hiding the potion icon to the victim for 5 seconds
+# critical hits in the darkness do true damage
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "spiritia":
+		if hit is critical:
+			if attack cooldown of attacker is 1:
+				sunlight level at the victim is less than 4:
+					victim's health > 3:
+						set victim's health to victim's health - 0.5
+						play sound "minecraft:entity.vex.charge" at victim to all players
+# when hit while shielding, deal true damage to attacker
+on damage:
+	if {%victim's uuid%.gifts::*} contains "spiritia":
+		if victim is blocking:
+			attacker's health > 4:
+				set attacker's health to attacker's health - 0.5

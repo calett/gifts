@@ -1,0 +1,25 @@
+# remove hunger from victim ability + im so proud of this visual effect
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "razent":
+		attacker's attack cooldown is 1:
+			attacker's attack cooldown is 1:
+				loop 90 times:
+					set {_v} to spherical vector with radius 2, yaw loop-value*4, pitch victim's pitch 
+					draw 1 of dust using dustOption(rgb(100,50+loop-value,0),1) at location 2 above victim ~ {_v} with extra 0
+				subtract 0.5 from victim's hunger
+				play sound "minecraft:entity.zombie.hurt" at victim to all players
+# defensive ability to remove hunger
+on damage:
+	if {%victim's uuid%.gifts::*} contains "razent":
+		attacker is a player:
+			chance of 40%:
+				loop 90 times:
+					set {_v} to spherical vector with radius 2, yaw loop-value*4, pitch victim's pitch 
+					draw 1 of dust using dustOption(rgb(0,50+loop-value,0),1) at location 2 above victim ~ {_v} with extra 0
+				delete {_v}
+				subtract 1 from attacker's hunger
+				play sound "minecraft:entity.zombie.hurt" at victim to all players
+# deal more damage based on victim's hunger
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "razent":
+		set damage to damage + (10 - victim's hunger)/20

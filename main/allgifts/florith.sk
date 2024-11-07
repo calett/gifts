@@ -1,0 +1,20 @@
+# bonemeal is more effective
+on right click:
+	player's tool is bonemeal:
+		{%player's uuid%.gifts::*} contains "florith":
+			distance between player's targeted block and player < 4.5:
+				player's targeted block is not any flower:
+					loop 2 times:
+						apply bone meal to player's targeted block
+# more damage during the day
+on damage:
+	{%attacker's uuid%.gifts::*} contains "florith":
+		time is between 7:00 and 17:00:
+			set damage to damage * 1.2
+# gain absorption from food
+on eat:
+	{%player's uuid%.gifts::*} contains "florith":
+		player does not have potion absorption:
+			apply potion of absorption of tier 1 to player for 5 seconds
+		else:
+			apply potion of absorption of tier 1 to player for 2 seconds

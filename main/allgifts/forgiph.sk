@@ -1,0 +1,23 @@
+# cheaper anvil costs
+on anvil prepare:
+	if {%player's uuid%.gifts::*} contains "forgiph":
+		set repair cost of event-inventory to repair cost of event-inventory - 3
+# forgiph crafting 
+on preparing craft:
+	if {%player's uuid%.gifts::*} contains "forgiph":
+		if durability of item is not 0:
+			set lore of event-slot to "&6Crafted by a Forgiph"
+# items crafted by a forgiph are more durable
+on item damage:
+	if lore of event-item contains "&6Crafted by a Forgiph":
+		chance of 60%:
+			cancel event
+# awards experience on craft			
+on craft:
+	if {%player's uuid%.gifts::*} contains "forgiph":
+		if durability of item is not 0:
+			chance of 50%:
+				set {_r} to random integer between 1 and 75
+				add {_r} to total experience of player
+				delete {_r}
+				play sound "minecraft:entity.experience_orb.pickup" at player to all players

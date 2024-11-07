@@ -1,0 +1,46 @@
+#scrapped gift 
+# frostbite ability, uses metadata
+# when frostbite reaches a certain amount, it applies mining fatigue
+# lot of visual effects!
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "glacia":
+		attack cooldown of attacker is 1:
+			victim is alive:
+				metadata value "glacia:frostbite" of victim is not set:
+					set metadata value "glacia:frostbite" of victim to 1
+				metadata value "glacia:frostbite" of victim < 10:
+					set metadata value "glacia:frostbite" of victim to (1+ metadata value "glacia:frostbite" of victim)
+				metadata value "glacia:frostbite" of victim > 1:
+					set metadata value "glacia:frostbite" of victim to 0
+					victim doesn't have potion mining fatigue:
+						apply potion of mining fatigue of tier 2 to victim for 4 seconds
+					else:
+						apply potion of mining fatigue of tier 2 to victim for 2 seconds
+					loop all blocks in radius 3 of victim:
+						chance of 5%:
+							loop 90 times:
+								set {_v} to spherical vector with radius 0.5, yaw loop-value-2*4, pitch victim's pitch 
+								draw 1 of dust using dustOption(rgb(104,172,173),1) at location 1 above loop-block ~ {_v} with extra 0
+					#-------------------------------------------------------#
+				metadata value "glacia:freeze" of victim is not set:
+					set metadata value "glacia:freeze" of victim to 1
+					play sound "minecraft:entity.player.hurt_freeze" at victim to all players
+				else:
+					metadata value "glacia:freeze" of victim < 10:
+						set metadata value "glacia:freeze" of victim to (1+ metadata value "glacia:freeze" of victim)
+						play sound "minecraft:entity.player.hurt_freeze" at victim to all players
+					metadata value "glacia:freeze" of victim = 10:
+						play sound "minecraft:block.glass.break" at pitch 0.5 at victim to all players
+						set metadata value "glacia:freeze" of victim to 0
+						set metadata value "glacia:frozen" of victim to true
+						wait 5 seconds
+						set metadata value "glacia:frozen" of victim to false
+# stops victim from switching items if frozen
+on held item change:
+	metadata value "glacia:frozen" of player is true:
+		cancel event
+# defensive ability, chance to freeze attacker
+on damage:
+	if {%victim's uuid%.gifts::*} contains "glacia":
+		chance of 25%:
+			set freeze time of attacker to 6 seconds

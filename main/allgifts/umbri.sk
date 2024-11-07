@@ -1,0 +1,23 @@
+# apply blindness ability
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "umbri":
+		if attacker's attack cooldown is 1:
+			if attacker is not victim:
+				if victim doesn't have potion blindness:
+					apply potion of blindness to victim for 2 seconds
+# apply weakness by hitting with fist
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "umbri":
+		if attacker's attack cooldown is 1:
+			if hit is critical:
+				if attacker's held item is air:
+					if victim doesn't have potion weakness:
+						apply potion of weakness of tier 1 to victim for 2 seconds
+						play sound "minecraft:entity.player.attack.knockback" at attacker to attacker
+# apply slowness by shooting victims
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "umbri":
+		if attacker's tool is bow:
+			attacker is not victim:
+				apply potion of slowness of tier 2 to victim for 5 seconds
+				play sound "minecraft:entity.player.attack.knockback" at attacker to attacker

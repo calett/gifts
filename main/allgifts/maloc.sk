@@ -1,0 +1,29 @@
+# lifesteal ability
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "maloc":
+		if hit is critical:
+			if attack cooldown of attacker is 1:
+				if attacker's held item is wooden sword or stone sword or golden sword or iron sword or diamond sword or netherite sword or trident or wooden axe or stone axe or iron axe or diamond axe or gold axe or netherite axe:
+					heal attacker by 0.5
+# shield breaker ability			
+on damage:
+	if {%attacker's uuid%.gifts::*} contains "maloc":
+		if hit is critical:
+			if attack cooldown of attacker is 1:
+				if attacker's held item is wooden sword or stone sword or golden sword or iron sword or diamond sword or netherite sword:
+					if item cooldown of shield for victim < 1 second:
+						cancel event
+						set item cooldown of shield for victim to 3 seconds
+						wait 1 tick
+						set {_i} to attacker's tool
+						set attacker's tool to gold axe
+						make attacker attack victim
+						set attacker's tool to {_i}
+# chance to nullify projectiles ability						
+on damage:
+	if {%victim's uuid%.gifts::*} contains "maloc":
+		damage cause is projectile:
+			event-projectile is arrow:
+				chance of 50%:
+					cancel event
+					play sound "minecraft:entity.player.big_fall" to victim
